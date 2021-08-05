@@ -11,7 +11,7 @@ void setup(){
 }
 
 void draw(){
-  background(69,169,169);
+  background(100);
   
   DrawBoard();
 }
@@ -29,6 +29,21 @@ void DrawSquares(){
   //Vertical lines
   for(int i = 0; i < 9; i++){
     line(squareSize * i, 0, squareSize * i, sHeight);
+  }
+  
+  //Draw light squares
+  for(int i = 0; i < 8; i += 2){
+    boolean leftSide = true;
+    for(int j = 0; j < 8; j++){
+      if(leftSide){
+        square(i * squareSize, j * squareSize, squareSize);
+        leftSide = false;
+      }
+      else{
+        square((i + 1) * squareSize, j * squareSize, squareSize);
+        leftSide = true;
+      }
+    }
   }
 }
 
