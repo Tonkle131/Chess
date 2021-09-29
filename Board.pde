@@ -1,11 +1,7 @@
 public class Board{
-  Piece[][] board = new Piece[8][8];
+  public Piece[][] board = new Piece[8][8];
   
   public Board(){
-    
-  }
-  
-  public void SetupStandard(){
     //  White
     
     //Pawns
@@ -46,6 +42,19 @@ public class Board{
     board[4][7] = new King(Piece.BLACK, 5, 8);
     //Queen
     board[3][7] = new Queen(Piece.BLACK, 4, 8);
-    
-  }  
+  };Piece GetPieceAtCoordinates(int x, int y){
+    return board[x - 1][7 - y];
+  }
+  
+  public Piece GetPieceAtIndex(int i, int j){
+    return board[i][j];
+  }
+  
+  public void RemovePieceAtCoordinates(int x, int y){
+    board[x - 1][y - 1] = null;
+  }
+  
+  public void PlacePieceAtCoordinates(Piece piece, int x, int y){
+    board[x - 1][y - 1] = piece;
+  }
 }

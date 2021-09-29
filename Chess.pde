@@ -1,15 +1,17 @@
 int sWidth = 800, sHeight = 800;
 
-Board b;
+Board board;
 int squareSize = 100;
 
 Piece pickedUpPiece;
+ArrayList<Move> availableMoves = new ArrayList();
+
+boolean whiteToMove = true;
 
 void setup(){
   size(800,800);
   
-  b = new Board();
-  b.SetupStandard();
+  board = new Board();
 }
 
 void draw(){
@@ -54,46 +56,86 @@ void DrawPieces(){
   Piece currentPiece;
   
   //Iterate over all squares on the board
-  for(int i = 0; i < 8; i++){ //<>//
-    for(int j = 0; j < 8; j++){ //<>//
+  for(int i = 0; i < 8; i++){
+    for(int j = 0; j < 8; j++){
       
-      if(b.board[i][j] != null){ //<>//
-        currentPiece = b.board[i][j]; //<>//
+      if(board.GetPieceAtIndex(i,j) != null){
+        currentPiece = board.GetPieceAtIndex(i,j);
       } else{
-        continue; //<>//
+        continue;
       }
       
       if(pickedUpPiece != null){
-        if(currentPiece.x == pickedUpPiece.x && currentPiece.y == pickedUpPiece.y){ //<>//
-          continue; //<>//
+        if(currentPiece.x == pickedUpPiece.x && currentPiece.y == pickedUpPiece.y){
+          continue;
         }
       }
       
-      image(currentPiece.img, squareSize * i, squareSize * (7 - j)); //<>//
+      image(currentPiece.img, squareSize * i, squareSize * (7 - j));
     }
   }
   
   if(pickedUpPiece != null){
     //Snap picked-up piece to cursor
-    
+    image(pickedUpPiece.img, mouseX - 50, mouseY - 50);
   }
 }
 
 void mousePressed(){
-  int selectedSquareX = ((mouseX + 100) / squareSize) - 1;
-  int selectedSquareY = 8 - ((mouseY + 100) / squareSize);
+  int selectedSquareX = (mouseX + 100) / squareSize;
+  int selectedSquareY = ((mouseY) / squareSize);
   
-  pickedUpPiece = b.board[selectedSquareX][selectedSquareY]; //<>//
-  
-  
-  
-  // //<>// //<>//
+  if(pickedUpPiece == null){//Picking up piece
+    pickedUpPiece = board.GetPieceAtCoordinates(selectedSquareX, selectedSquareY);
+    
+    if(pickedUpPiece == null){
+      return;
+    }
+    
+    //Validate piece can be picked up
+    if(pickedUpPiece.colour != whiteToMove){
+      pickedUpPiece = null;
+    }
+    
+    availableMoves = pickedUpPiece.GetValidMoves();
+    
+  } else{ //Placing piece
+    if(ValidateMove(pickedUpPiece, selectedSquareX, selectedSquareY)){
+      //Move was valid
+      MakeMove(pickedUpPiece, selectedSquareX, selectedSquareY);
+      
+    } else{
+      //Move was invalid
+      pickedUpPiece = null;
+      
+    }
+  }
 }
 
-void CheckMove(){
+boolean ValidateMove(Piece pieceToMove, int x, int y){
+  Move selectedMove = null;
   
+  if(availableMoves == null || availableMoves.isEmpty()){
+    return false; //<>//
+  }
+  
+  for(Move move : availableMoves){
+    if(move.x2 == x && move.y2 == y){
+      selectedMove = move;
+    } //<>//
+  } //<>//
+  
+  if(selectedMove == null){
+    return false; //<>//
+  }
+  
+  
+  
+  return true; //<>//
 }
 
-void MovePieceBackToOrigin(Piece selectedPiece){
-  
+void MakeMove(Piece pieceToMove, int destX, int destY){
+  board.RemovePieceAtCoordinates(destX, destY);
+  board.PlacePieceAtCoordinates(pieceToMove, destX, destY);
+  pickedUpPiece = null;
 }
