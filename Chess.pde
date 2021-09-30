@@ -65,6 +65,7 @@ void DrawPieces(){
         continue;
       }
       
+      //Skip piece if it is picked up (snap piece to cursor later)
       if(pickedUpPiece != null){
         if(currentPiece.x == pickedUpPiece.x && currentPiece.y == pickedUpPiece.y){
           continue;
@@ -83,7 +84,7 @@ void DrawPieces(){
 
 void mousePressed(){
   int selectedSquareX = (mouseX + 100) / squareSize;
-  int selectedSquareY = ((mouseY) / squareSize);
+  int selectedSquareY = 8 - ((mouseY) / squareSize);
   
   if(pickedUpPiece == null){//Picking up piece
     pickedUpPiece = board.GetPieceAtCoordinates(selectedSquareX, selectedSquareY);
@@ -102,7 +103,9 @@ void mousePressed(){
   } else{ //Placing piece
     if(ValidateMove(pickedUpPiece, selectedSquareX, selectedSquareY)){
       //Move was valid
+      board.RemovePieceAtCoordinates(pickedUpPiece.x, pickedUpPiece.y);
       MakeMove(pickedUpPiece, selectedSquareX, selectedSquareY);
+      
       
     } else{
       //Move was invalid
@@ -116,22 +119,22 @@ boolean ValidateMove(Piece pieceToMove, int x, int y){
   Move selectedMove = null;
   
   if(availableMoves == null || availableMoves.isEmpty()){
-    return false; //<>//
+    return false;
   }
   
   for(Move move : availableMoves){
     if(move.x2 == x && move.y2 == y){
       selectedMove = move;
-    } //<>//
-  } //<>//
+    }
+  }
   
   if(selectedMove == null){
-    return false; //<>//
+    return false;
   }
   
   
   
-  return true; //<>//
+  return true;
 }
 
 void MakeMove(Piece pieceToMove, int destX, int destY){

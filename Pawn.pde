@@ -24,7 +24,7 @@ public class Pawn extends Piece{
     if(colour == WHITE){
       //Forward once
       if(board.board[idxX][idxY - 1] == null){
-        availableMoves.add(new Move(x,y,x,y+1, false, false)); //<>//
+        availableMoves.add(new Move(x,y,x,y+1, false, false));
       }
       //Forward twice
       if(board.board[x][8 - y] == null && isFirstMove){
