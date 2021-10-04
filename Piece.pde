@@ -23,11 +23,4 @@ public class Piece{
     
     return null;
   }
-  
-  public void MovePiece(int x, int y){
-    this.x = x;
-    this.y = y;
-    this.idxX = x - 1;
-    this.idxY = 8 - y;
-  }
 }
